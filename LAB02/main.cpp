@@ -1,31 +1,24 @@
 #include <iostream>
 #include <string>
 #include "search.h"
-int main() {
-    /* run the below lines to generate input files in local directory
-     * recommend running the following two lines the first time to populate possible build directory
-     */
-
-
-    const int sizes[4] = {10, 1000, 10000, 100000};
-    const char * inputTypes[4] = {"Random", "Reverse", "ThirtyPercent", "TwentyPercent"};
-    const char * sortTypes[3] = {"Bubble", "Merge", "Insertion"};
+#include <ctime>
+//get stats from seach that returns thing
+int main(int argc, char ** argv) {
+    srand(time(0));
+    const char * sortTypes[4] = {"DFS", "BFS", "DIJKSTRA" , "A*" };
     algorithm * algos = new search();
-
-    //loop through all algo types and their corresponding sizes
-    algos->load("graph.txt", "weights.txt", "positions.txt");
-    for(int q = 0; q <1; q++) {
-        algos->select(q);
-        for(int i=0; i < 4; i++) {
-            for(int j =0; j<4; j++) {
-                //path string is the formatted strings for proper file names
-                std::string path = inputTypes[i] + std::to_string(sizes[j]) + ".txt";
-                //algos->load(path.c_str(), inputTypes[i]);
-                algos->execute();
-                path = sortTypes[q]  + std::to_string(sizes[j]) +  inputTypes[i]  + ".txt";
-                algos->save(path.c_str());
-            }
-        }
+    int start, end = 1;
+    if(argc >= 3) {
+        start = atoi(argv[1]);
+        end = atoi(argv[2]);
     }
+    //loop through all algo types and their corresponding sizes
+    algos->load("../inputfiles/graph.txt", "../inputfiles/weights.txt", "../inputfiles/positions.txt");
+    for(int q = 0; q < 4; q++) {
+        algos->select(q);
+        algos->execute(start, end);
+        algos->save("finalPaths.csv");
+    }
+    delete algos;
     return 0;
 }
